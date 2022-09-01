@@ -19,7 +19,21 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 //defino lugar donde se van a poder ver los archivos 
 app.use('/public', express.static(__dirname + '/public'));
-//un middleware de prueba
+//un middleware de validacion
+
+const admin = true;
+function validacion (req, res, next) {
+  if(admin = true){
+    console.log("acceso permitido")
+    }
+    next();
+  }
+
+//control de direccion de error de paginas
+app.use((req, res) =>{
+  const url = req.originalUrl;
+res.status(404).send({error: "-1", descripcion: "ruta" + url + " no autorizada"})
+})
 
 app.use('/api/', router)
 //para usar archivos
@@ -51,14 +65,14 @@ let productos = JSON.parse(data)
 
 
 //muestra todos los productos
-router.get("/productos", (req, res) => {
+router.get("/productos", validacion, (req, res) => {
     const products = new Products (productos)
     res.json(products.getAll())
 })
 
 
 //GET CON ID IDENTIFICADOR EN LA URL TIPO PARAMS
-router.get('/productos/:id', (req, res) => {
+router.get('/productos/:id', validacion, (req, res) => {
     let { id } = req.params;
     const products = new Products(productos)
     id = parseInt(id)
@@ -72,7 +86,7 @@ router.get('/productos/:id', (req, res) => {
   });
 
   
-  router.post('/productos', (req, res) => {
+  router.post('/productos',validacion, (req, res) => {
     const {body} = req;
     const lastId = productos[productos.length - 1];
     
@@ -85,7 +99,7 @@ router.get('/productos/:id', (req, res) => {
 
 
 //PUT CON ID PARAMS SIEMPRE y BODY!
-router.put('/productos/:id', (req, res) => {
+router.put('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;
     const { body } = req;
     const productToChange = productos.find((item)=>item.id ==id)
@@ -96,7 +110,7 @@ router.put('/productos/:id', (req, res) => {
 //ver si tengo que darle cambio en el archivo tambien com
 
   //DELETE CON ID PARAMS SIEMPRE
-  router.delete('/productos/:id', (req, res) => {
+  router.delete('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;  
     const productsFilteredById = productos.filter((item)=> item.id != id)
     //si quiero puedo guardar este en el productos.json actualizando 
