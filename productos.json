@@ -1,0 +1,33 @@
+[ {
+  "id": 1,
+  "fecha": "",
+  "nombre": "Habitación Single Estándar",
+  "descripcion": "Para 1 persona / 26m2",
+  "codigo": 1111,
+  "foto": "https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png",
+  "precio": 5800,
+  "stock": 5
+  },
+  {
+    "id": 2,
+    "fecha": "",
+    "nombre": "Habitación Doble Estándar",
+    "descripcion": "Para 2 personas / 26m2",
+    "codigo": 2222,
+    "foto": "https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png",
+    "precio": 5800,
+    "stock": 10
+  },
+  {
+    "id": 3,
+    "fecha": "",
+    "nombre": "Habitación Triple Estándar",
+    "descripcion": "Para 3 personas / 42m2",
+    "codigo": 3333,
+    "foto": "https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png",
+    "precio": 5800,
+    "stock": 5
+  }
+ ]
+
+ 
