@@ -21,8 +21,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/public', express.static(__dirname + '/public'));
 //un middleware de validacion
 
-const admin = true;
+let admin = true;
 function validacion (req, res, next) {
+  
   if(admin = true){
     console.log("acceso permitido")
     }
@@ -30,10 +31,10 @@ function validacion (req, res, next) {
   }
 
 //control de direccion de error de paginas
-app.use((req, res) =>{
-  const url = req.originalUrl;
-res.status(404).send({error: "-1", descripcion: "ruta" + url + " no autorizada"})
-})
+// app.use((req, res) =>{
+//   const url = req.originalUrl;
+// res.status(400).send({error: "-1", descripcion: "ruta" + url + " no autorizada"})
+// })
 
 app.use('/api/', router)
 //para usar archivos
