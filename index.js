@@ -19,8 +19,17 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 //defino lugar donde se van a poder ver los archivos 
 app.use('/public', express.static(__dirname + '/public'));
-//un middleware de validacion
 
+
+
+
+
+//un middleware de validacion
+app.use((err, req, res, next) =>{
+res.status(err.status || 500);
+console.log(err.status)
+
+})
 let admin = true;
 function validacion (req, res, next) {
   
@@ -30,14 +39,26 @@ function validacion (req, res, next) {
     next();
   }
 
-//control de direccion de error de paginas
-// app.use((req, res) =>{
-//   const url = req.originalUrl;
-// res.status(400).send({error: "-1", descripcion: "ruta" + url + " no autorizada"})
-// })
+
+
+
 
 app.use('/api/', router)
-//para usar archivos
+
+//control de direccion de error de paginas
+app.use((req, res, next) =>{
+  const url = req.originalUrl;
+    res.status(404).send({error: "-1", descripcion: "ruta" + url + " no autorizada"})
+    next()
+})
+
+//una forma de agregar error
+// app.get("*", (req,res) =>{
+  //   res.send("error")
+  // })
+
+
+  //para usar archivos
 const fs = require('fs')
 
 let fecha = new Date()
@@ -67,6 +88,7 @@ let productos = JSON.parse(data)
 
 //muestra todos los productos
 router.get("/productos", validacion, (req, res) => {
+  
     const products = new Products (productos)
     res.json(products.getAll())
 })
