@@ -52,6 +52,8 @@ app.use((req, res, next) =>{
     next()
 })
 
+
+
 //una forma de agregar error
 // app.get("*", (req,res) =>{
   //   res.send("error")
@@ -81,8 +83,47 @@ let productos = JSON.parse(data)
     findOne(id){
     return this.products.find((item)=>item.id == id)
     }
-}
 
+    async save(product){
+      try{
+          
+          let contenidoEnJson = JSON.parse(productos);
+          let arreglo = []
+          //esto lo hago para obtener el ultimo numero de id ordenado
+          const indice = contenidoEnJson.map(x=>x.id).sort()
+          // para que sume a partir de el ultimo id 1+
+          const lastItem = this.products[this.products.length - 1]
+          let lastId = 1;
+          if (lastItem){
+            lastId = lastItem.id + 1;
+            
+          }
+          product.id = lastId
+          arreglo = [{...product}]
+          // this.products.push(product)
+          contenidoEnJson.push(product)
+
+          await fs.promises.writeFile('productos.json', JSON.stringify(contenidoEnJson))
+          return this.products[this.products.length - 1];
+          // asigna un id para que no sea null. 
+          // if (!objeto.id){
+          //     objeto.id= +1
+          //     arreglo = [{...objeto}]
+          //     await fs.promises.writeFile('productos.json', JSON.stringify(arreglo))
+          //     return arreglo[0].id
+          // }
+          
+          contenidoEnJson.push(objeto)
+          
+          await fs.promises.writeFile('productos.json', JSON.stringify(contenidoEnJson))
+      
+      }catch(error){
+          console.log("No se pudo grabar el archivo")
+      }
+  
+  }
+
+}
 
 
 
@@ -115,8 +156,9 @@ router.get('/productos/:id', validacion, (req, res) => {
     
     //agrego bien el body y agrego un id nuevo le agrego fecha
     let nuevoId = lastId.id + 1;
-    let insertBody = {id: nuevoId, fecha: fecha.toLocaleDateString(), nombre: body.name, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
+    let insertBody = {id: nuevoId, fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
     productos.push(insertBody);
+    fs.promises.writeFile('productos.json', JSON.stringify(productos))
   });
 //tengo que ver como darle que escriba en los archivos y agregue el insertbody
 
