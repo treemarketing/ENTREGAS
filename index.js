@@ -158,9 +158,10 @@ router.get('/productos/:id', validacion, (req, res) => {
     let nuevoId = lastId.id + 1;
     let insertBody = {id: nuevoId, fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
     productos.push(insertBody);
+    //grabo el inserbody en productos.json
     fs.promises.writeFile('productos.json', JSON.stringify(productos))
   });
-//tengo que ver como darle que escriba en los archivos y agregue el insertbody
+
 
 
 //PUT CON ID PARAMS SIEMPRE y BODY!
@@ -179,7 +180,10 @@ router.put('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;  
     const productsFilteredById = productos.filter((item)=> item.id != id)
     //si quiero puedo guardar este en el productos.json actualizando 
-    console.log(productsFilteredById)
+    productos = []
+    productos.push(productsFilteredById)
+    console.log(productos)
+    // fs.promises.writeFile('productos.json', JSON.stringify(productos))
     res.json("borrado")
   });
 
