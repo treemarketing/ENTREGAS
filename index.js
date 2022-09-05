@@ -175,15 +175,16 @@ router.put('/productos/:id',validacion, (req, res) => {
   });
 //ver si tengo que darle cambio en el archivo tambien com
 
-  //DELETE CON ID PARAMS SIEMPRE
+  //DELETE CON ID ESCRIBIENDO EN EL ARCHIVO 
   router.delete('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;  
     const productsFilteredById = productos.filter((item)=> item.id != id)
     //si quiero puedo guardar este en el productos.json actualizando 
     productos = []
+    fs.writeFileSync('productos.json', JSON.stringify(productos))
     productos.push(productsFilteredById)
     console.log(productos)
-    // fs.promises.writeFile('productos.json', JSON.stringify(productos))
+    fs.writeFileSync('productos.json', JSON.stringify(productos))
     res.json("borrado")
   });
 
