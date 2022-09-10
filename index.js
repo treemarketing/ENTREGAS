@@ -109,24 +109,12 @@ let fecha = new Date()
     async save(product){
       try{
           const contenidoEnJson = await this.getAll()
-          const indice = contenidoEnJson.map(x=>x.id).sort()
+          const indice = contenidoEnJson.map(x=>x.id).sort((a,b) => a - b)
           const lastItem = indice[indice.length - 1] + 1
           // let contenidoEnJson = JSON.parse(productos);
 
           //si ya creo la variable no tengo que volver a agregar
           let arreglo = []
-          
-          
-         
-          
-          // let lastId = 1;
-          // if (lastItem){
-          //   lastId = lastItem.id + 1;
-            
-          // }
-          // product.id = lastId
-          // arreglo = [{...product}]
-          //PARTE QUE ME FALTABA
           if (indice.length == 0){
 
             arreglo = { id: 1, ...product }
@@ -166,7 +154,7 @@ let fecha = new Date()
           producToChange.precio = objeto.precio
           producToChange.stock = objeto.stock
           
-          
+            //hago que vuelva a grabar todo pero con los cambios introducitos en la constante
             await fs.promises.writeFile('productos.json', JSON.stringify(json))                
             return producToChange
         } catch(error){
@@ -177,7 +165,21 @@ let fecha = new Date()
     }
 }
 
+  async delete(id){
+    const json = await this.getAll()
+    const filterJson = json.filter((e) => e.id != id)
 
+    try{
+        if(json.length != filterJson.length){
+            await fs.promises.writeFile('productos.json', JSON.stringify(filterJson))
+            return true
+        } else{
+            return false
+        }
+    } catch(error){
+        return false
+    }
+  }
 }
 
 const product = new Products ("product")
@@ -200,8 +202,6 @@ router.get('/productos/:id', validacion, async (req, res) => {
     await product.findOne(id).then((respuesta)=>{
       const encontrar = respuesta
       
-
-      // const encontrar = products.findOne(id)
       if (encontrar){
           res.json(encontrar)
       }else{
@@ -222,17 +222,6 @@ router.get('/productos/:id', validacion, async (req, res) => {
           await product.save(insertBody).then((respuesta)=>{
             console.log(respuesta)
             res.json(respuesta);
-            
-
-    // const lastId = respuesta[respuesta.length - 1];
-    
-    //agrego bien el body y agrego un id nuevo le agrego fecha
-    // let nuevoId = lastId.id + 1;
-    
-    // respuesta.push(insertBody);
-    //grabo el inserbody en productos.json
-    // fs.promises.writeFile('productos.json', JSON.stringify(insertBody));
-    //terminar con la respuesta
     
   });
 })
@@ -249,7 +238,7 @@ router.put('/productos/:id',validacion, (req, res) => {
 
         res.json({ sucess: "ok", new: respuesta})
       })
-      }) 
+  }) 
  
 
 //ver si tengo que darle cambio en el archivo tambien com
@@ -257,115 +246,214 @@ router.put('/productos/:id',validacion, (req, res) => {
   //DELETE CON ID ESCRIBIENDO EN EL ARCHIVO 
   router.delete('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;  
-    const productsFilteredById = productos.filter((item)=> item.id != id)
-    //si quiero puedo guardar este en el productos.json actualizando 
-    productos = []
-    fs.writeFileSync('productos.json', JSON.stringify(productos))
-    productos.push(productsFilteredById)
-    console.log(productos)
-    fs.writeFileSync('productos.json', JSON.stringify(productos))
-    res.json("borrado")
+   
+    product.delete(id).then((response) => {
+      res.json({ result: response })
+    })
   });
 
 
 
-//   ///CARRITO CREAR ARCHIVO 
-//   async function getData(){
-//     try{
-//         return await fs.promises.readFile("carrito.json", "utf-8");
-//     } catch (error){
-//         if(error.code == "ENOENT"){
-          
-//             fs.writeFile(nuevoId+".json", "[]", (error)=>{
-//             if(error){
-//                 console.log("el archivo no pudo ser creado")
-//             }
-//         })
-       
-//     }
-    
-// }
+
 
 
   //me fijo si ya tengo creado el archivo sino lo creo ACA TENGO QUE CREAR UN ID POR CARRITO
+  class Cart {
+    constructor(carts){
+    this.carts = [...carts];
+    }
 
-router.post('/', (req, res) => {
-  const {body} = req;
-  const lastId = carrito[carrito.length - 1];
-  let nuevoId = lastId.id + 1;
- let nuevoCarrito = {id: nuevoId, fecha:fecha.toLocaleDateString()  }
- carrito.push(nuevoCarrito)
+    async  getAll(){
+      try{
+        const data = await fs.promises.readFile('carrito.json', "utf-8")
+        let carritos = JSON.parse(data);
+          
+        return carritos
+        
+    } catch (error){
+        if(error.code == "ENOENT"){
+            fs.writeFile('carrito.json',"[]", (error)=>{
+                console.log("el archivo no pudo ser creado")
+                return false
+            });
+            return []
+        }
+       
+    }
+}
+
+
+async save(){
+  let arreglo = {};
+  try{
+      const contenidoEnJson = await this.getAll()
+      console.log(contenidoEnJson)
+      const indice = contenidoEnJson.map(x=>x.id).sort((a,b) => a - b)
+      const lastItem = indice[indice.length - 1] + 1
+
+    
+    
+      
+      if (indice.length == 0){
+
+        arreglo = { id: 1, ...arreglo}
+      }else{
+        arreglo =  { id: lastItem, ...arreglo }
+      }  
+
+       arreglo.timestamp = new Date()
+       arreglo.productos = [];
+
+
+      contenidoEnJson.push(arreglo)
+
+      await fs.promises.writeFile('carrito.json', JSON.stringify(contenidoEnJson))
+      return arreglo.id;
+
+  
+  }catch(error){
+      console.log("No se pudo grabar el archivo")
+  }
+
+}
+  async delete(id){
+  const json = await this.getAll()
+  const filterJson = json.filter((e) => e.id != id)
+
+  try{
+      if(json.length != filterJson.length){
+          await fs.promises.writeFile('carrito.json', JSON.stringify(filterJson))
+          return true
+      } else{
+          return false
+      }
+  } catch(error){
+      return false
+  }
+}
+
+
+async getProductsByCart(id){
+  const json = await this.getAll()
+  const cartFound = json.find((e) => e.id == id)
+
+  if(cartFound){
+      if(cartFound.productos){
+          return cartFound.productos
+      } else{
+          return null
+      }
+  } else{
+      return null
+  }        
+}
+
+
+async addToCart(id, objeto){
+  const json = await this.getAll()
+  const cartFound = json.find((e) => e.id == id)
+
+  if(cartFound){
+      try{
+          cartFound.productos.push(objeto)
+
+          await fs.promises.writeFile('carrito.json', JSON.stringify(json))
+          return true
+      } catch(error){
+          return false
+      }
+  } else{
+      return false
+  }
+}
+
+
+async deleteProductOnCart(cartId, productId){
+  const json = await this.getAll()
+  const cartFound = json.find((e) => e.id == cartId)
+
+  const filterCart = cartFound.products.filter((p) => p.id != productId)
+  cartFound.products = filterCart
+
+  try{
+      if(cart.length != filterCart.length){
+          await fs.promises.writeFile('carrito.json', JSON.stringify(json))
+          return true
+      } else{
+          return false
+      }
+  } catch(error){
+      return false
+  }
+}
+
+  }    
+
+
+
+  const cart = new Cart('cart')
+  cart.getAll()
+
+
+router.post('/carrito', (req, res) => {
+ cart.save().then((response) =>{
+            res.json(response)
+        })
 
 });
 
 
- 
-
-  //leo el archivo de carrito 
-  const dataCarrito = fs.readFileSync('carrito.json', 'utf8');
-    let carrito = JSON.parse(dataCarrito)
-
     //muestra todos los productos que estan dentro del carrito
 router.get("/carrito", (req, res) => {
-    const products = new Products (carrito)
-    res.json(products.getAll())
-})
+
+    cart.getAll().then((respuesta)=>{
+      
+    res.json(respuesta)
+    }) 
+  }) 
 
 
-  //POST CARRITO ID 
 
 
   //DELETE CON ID CARRITO
   router.delete('/carrito/:id', (req, res) => {
     const { id } = req.params;  
-    const carritoFilteredById = productos.filter((item)=> item.id != id)
-    //si quiero puedo guardar este en el carrito.json actualizando 
-    console.log(carritoFilteredById)
-    res.json("borrado")
+    cart.delete(id).then((response) => {
+      res.json({ result: response })
+    })
   });
 
 
   //GET CON ID IDENTIFICADOR EN LA URL TIPO PARAMS
 router.get('/carrito/:id/productos', (req, res) => {
   let { id } = req.params;
-  const products = new Products(carrito)
-  id = parseInt(id)
 
-  const encontrar = products.findOne(id)
-  if (encontrar){
-      res.json(encontrar)
-  }else{
-  res.json({error: "producto no encontrado"})
-  }
-});
+  // id = parseInt(id)
+  cart.getProductsByCart(id).then((respuesta) => {
+    res.json(respuesta);
+  });
+})
 
-//POST en el carrito
+
+
+//AGREGO PRODUCTOS AL CARRITO DEL
 
 router.post('/carrito/:id/productos', (req, res) => {
-  const {body} = req;
-  const lastId = carrito[carrito.length - 1];
-  
-  //agrego bien el body y agrego un id nuevo
-  let nuevoId = lastId.id + 1;
-  let insertBody = {id: nuevoId, fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
-  carrito.push(insertBody);
-  fs.writeFileSync('productos.json', JSON.stringify(carrito))
+  const {id} = req.params;
+  const { nombre, fecha, descripcion, codigo, foto, precio, stock } = req.body
+  const productos = { id: req.body.id ,fecha,  nombre, descripcion, codigo, foto, precio, stock };
+  cart.addToCart(id, productos).then((response) =>{
+             res.json(response)
+         })
+ 
+ });
+
+// BORRO POR ID DE PRODUCTOS
+
+router.delete('/carrito/:id', (req, res) => {
+  const { id } = req.params;  
+  cart.delete(id).then((response) => {
+    res.json({ result: response })
+  })
 });
-//tengo que ver como darle que escriba en los archivos y agregue el insertbody
-
-
-  //DELETE CON ID CARRITO POR PRODUCTO
-  // router.delete('/carrito/:id/productos/:id_prod', (req, res) => {
-  //   const { id } = req.params;
-  //   const {id_prod} = req.params;
-
-  //   const productoFilteredById = productos.filter((item)=> item.id != id_prod)
-  //   const carritoFilteredById = productos.filter((item)=> item.id != id)
-  //   //si quiero puedo guardar este en el carrito.json actualizando 
-  //   console.log(carritoFilteredById)
-  //   console.log(productoFilteredById)
-  //   res.json("borrado")
-  // 
-
-
 
