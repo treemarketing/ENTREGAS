@@ -107,6 +107,7 @@ let fecha = new Date()
     }
 
     async save(product){
+
       try{
           const contenidoEnJson = await this.getAll()
           const indice = contenidoEnJson.map(x=>x.id).sort((a,b) => a - b)
@@ -114,7 +115,7 @@ let fecha = new Date()
           // let contenidoEnJson = JSON.parse(productos);
 
           //si ya creo la variable no tengo que volver a agregar
-          let arreglo = []
+           let arreglo = [];
           if (indice.length == 0){
 
             arreglo = { id: 1, ...product }
@@ -216,13 +217,10 @@ router.get('/productos/:id', validacion, async (req, res) => {
   
   router.post('/productos',validacion, async (req, res) => {
     const {body} = req;
-    
-    
-          let insertBody = {  fecha:fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
+          console.log(body)
+          let insertBody = {fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
           await product.save(insertBody).then((respuesta)=>{
-            console.log(respuesta)
             res.json(respuesta);
-    
   });
 })
 
@@ -232,6 +230,7 @@ router.put('/productos/:id',validacion, (req, res) => {
     const { id } = req.params;
     const { body } = req;
     const { nombre, descripcion, codigo, foto, precio, stock } = body
+    console.log(body.id)
     const p = { id, nombre, descripcion, codigo, foto, precio, stock };
       
       product.update(p).then((respuesta)=>{
@@ -372,7 +371,7 @@ async deleteProductOnCart(cartId, productId){
   const json = await this.getAll()
   const cartFound = json.find((e) => e.id == cartId)
 
-  const filterCart = cartFound.products.filter((p) => p.id != productId)
+  const filterCart = cartFound.productos.filter((p) => p.id != productId)
   cartFound.products = filterCart
 
   try{
@@ -440,19 +439,23 @@ router.get('/carrito/:id/productos', (req, res) => {
 
 router.post('/carrito/:id/productos', (req, res) => {
   const {id} = req.params;
-  const { nombre, fecha, descripcion, codigo, foto, precio, stock } = req.body
-  const productos = { id: req.body.id ,fecha,  nombre, descripcion, codigo, foto, precio, stock };
-  cart.addToCart(id, productos).then((response) =>{
+  const { body } = req;
+  const { nombre, descripcion, codigo, foto, precio, stock } = body
+  const insertProducts = { id: body.id, nombre, descripcion, codigo, foto, precio, stock };
+  //  const {fecha, nombre, descripcion, codigo, foto, precio, stock } = req.body
+
+
+  cart.addToCart(id, insertProducts).then((response) =>{
              res.json(response)
          })
- 
+
  });
 
 // BORRO POR ID DE PRODUCTOS
 
-router.delete('/carrito/:id', (req, res) => {
-  const { id } = req.params;  
-  cart.delete(id).then((response) => {
+router.delete('/carrito/:id/productos/:idProd', (req, res) => {
+  const { id, idProd } = req.params;  
+  cart.deleteProductOnCart(id, idProd).then((response) => {
     res.json({ result: response })
   })
 });
