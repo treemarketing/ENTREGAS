@@ -218,7 +218,7 @@ router.get('/productos/:id', validacion, async (req, res) => {
   router.post('/productos',validacion, async (req, res) => {
     const {body} = req;
           console.log(body)
-          let insertBody = {fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.price, stock: body.stock}
+          let insertBody = {fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.precio, stock: body.stock}
           await product.save(insertBody).then((respuesta)=>{
             res.json(respuesta);
   });
