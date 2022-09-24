@@ -15,9 +15,9 @@ class Producto{
 
 async save(producto){
     try{
-        let tiempo = new Date()
+        // let tiempo = new Date()
         await this.connectMDB()
-        producto.time = tiempo.toString()
+        // producto.time = tiempo.toString()
         await esquemaProd.create(producto)
         const id = producto.idP
         mongoose.disconnected()

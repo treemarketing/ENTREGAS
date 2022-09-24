@@ -40,8 +40,13 @@ app.use('/public', express.static(__dirname + '/public'));
 //     }
 //   }
 
-  const cartRouter = require('./routers/carrito')
-  const productsRouter = require('./routers/productos')
+
+//RUTAS DE ROUTER CON FILE SYSTEM
+  // const cartRouter = require('./routers/carritoFile')
+  // const productsRouter = require('./routers/productosFile')
+
+  const cartRouter = require('./routers/carritoFirebase')
+  const productsRouter = require('./routers/productosMongo')
 
 app.use('/api/productos', productsRouter)
 app.use('/api/carrito', cartRouter)
