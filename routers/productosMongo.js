@@ -32,9 +32,9 @@ productsRouter.get("/", validacion, async (req, res) => {
 
 
 //GET CON ID IDENTIFICADOR EN LA URL TIPO PARAMS
-productsRouter.get('/:id', validacion, async (req, res) => {
-   let { id } = req.params;
-   await product.findOne(id).then((respuesta)=>{
+productsRouter.get('/:idP', validacion, async (req, res) => {
+   let { idP } = req.params;
+   await product.findOne(idP).then((respuesta)=>{
      const encontrar = respuesta
      
      if (encontrar){
@@ -59,13 +59,13 @@ productsRouter.post('/',validacion, async (req, res) => {
 
 
 //PUT CON ID PARAMS SIEMPRE y BODY!
-productsRouter.put('/:id',validacion, (req, res) => {
-   const { id } = req.params;
-   let idProd = parseInt(id)
+productsRouter.put('/:idP',validacion, (req, res) => {
+   const { idP } = req.params;
+   let idProd = parseInt(idP)
    const { body } = req;
    const { nombre, descripcion, codigo, foto, precio, stock } = body
    console.log(body.id)
-   const cambio = { id, nombre, descripcion, codigo, foto, precio, stock };
+   const cambio = { idP, nombre, descripcion, codigo, foto, precio, stock };
      
      product.changeById(idProd, cambio).then((respuesta)=>{
 
@@ -77,9 +77,9 @@ productsRouter.put('/:id',validacion, (req, res) => {
 //ver si tengo que darle cambio en el archivo tambien com
 
  //DELETE CON ID ESCRIBIENDO EN EL ARCHIVO 
- productsRouter.delete('/:id',validacion, (req, res) => {
-   const { id } = req.params;  
-   let idProd = parseInt(id)   
+ productsRouter.delete('/:idP',validacion, (req, res) => {
+   const { idP } = req.params;  
+   let idProd = parseInt(idP)   
    product.deleteById(idProd).then((response) => {
      res.json({ result: response })
    })

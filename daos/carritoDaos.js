@@ -75,19 +75,19 @@ class Carrito {
 
 
 
-  async deleteProductoDeCarrito(id, idProd, idEncarrito){
+  async deleteProductoDeCarrito(idC, idP, idEncarrito){
     try{
       function random (min, max){
           return Math.floor((Math.random() * (max - min + 1)) + min)
       }
-      let productoAtlas = await Productos.getById(idProd)
+      let productoAtlas = await Productos.getById(idP)
 
 
       const db = admin.firestore()
       const query = db.collection('carritos')
-      const doc = query.doc(id)
+      const doc = query.doc(idC)
       
-      productoAtlas.id = idEncarrito
+      productoAtlas.idC = idEncarrito
 
       await doc.update({
         productos: admin.firestore.FieldValue.arrayRemove(String(productoAtlas))})
@@ -101,17 +101,17 @@ class Carrito {
   
 
 
-    async agregarProducto(id, objeto){
+    async agregarProducto(idC, objeto){
       try{
         function random (min, max){
           return Math.floor((Math.random() * (max - min + 1)) + min)
         }
-        let productoAtlas = await Productos.getById(objeto.id)
+        let productoAtlas = await Productos.getById(objeto.idP)
   
   
         const db = admin.firestore()
         const query = db.collection('carritos')
-        const doc = query.doc(id)
+        const doc = query.doc(idC)
         
         let idrand = random(1,10000)
         productoAtlas.id = String(idrand)

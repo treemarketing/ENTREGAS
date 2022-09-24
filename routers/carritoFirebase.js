@@ -37,22 +37,22 @@ const cartRouter = Router()
 
 
   //DELETE CON ID CARRITO OK
-  cartRouter.delete('/:id', (req, res) => {
-    const { id } = req.params;  
+  cartRouter.delete('/:idC', (req, res) => {
+    const { idC } = req.params;  
   
 
-    cart.deleteCarritoById(id).then((response) => {
+    cart.deleteCarritoById(idC).then((response) => {
       res.json({ result: response })
     })
   });
 
 
   //GET CON ID IDENTIFICADOR EN LA URL TIPO PARAMS OK
-  cartRouter.get('/:id/productos', (req, res) => {
-  let { id } = req.params;
+  cartRouter.get('/:idC/productos', (req, res) => {
+  let { idC } = req.params;
 
   // id = parseInt(id)
-  cartRouter.getProductsByCart(id).then((respuesta) => {
+  cartRouter.getProductsByCart(idC).then((respuesta) => {
     res.json(respuesta);
   });
 })
@@ -61,15 +61,15 @@ const cartRouter = Router()
 
 //AGREGO PRODUCTOS AL CARRITO OK
 
-cartRouter.post('/:id/productos', (req, res) => {
-  const {id} = req.params;
+cartRouter.post('/:idC/productos', (req, res) => {
+  const {idC} = req.params;
   const { body } = req;
   const { nombre, descripcion, codigo, foto, precio, stock } = body
-  const insertProducts = { id: body.id, nombre, descripcion, codigo, foto, precio, stock };
+  const insertProducts = { idP: body.idP, nombre, descripcion, codigo, foto, precio, stock };
   //  const {fecha, nombre, descripcion, codigo, foto, precio, stock } = req.body
 
 
-  cart.agregarProducto(id, insertProducts).then((response) =>{
+  cart.agregarProducto(idC, insertProducts).then((response) =>{
              res.json(response)
          })
 
@@ -77,10 +77,10 @@ cartRouter.post('/:id/productos', (req, res) => {
 
 // BORRO POR ID DE PRODUCTOS OK
 
-cartRouter.delete('/:id/productos/:idProd', (req, res) => {
-  const { id, idProd } = req.params;  
+cartRouter.delete('/:idC/productos/:idP', (req, res) => {
+  const { idC, idP } = req.params;  
   let idEncarrito = id; 
-  cart.deleteProductoDeCarrito(id, idProd, idEncarrito).then((response) => {
+  cart.deleteProductoDeCarrito(idC, idP, idEncarrito).then((response) => {
     res.json({ result: response })
   })
 });
