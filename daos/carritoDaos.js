@@ -1,7 +1,7 @@
 
 let admin = require("firebase-admin");
 
-let serviceAccount = require("./ecommerce-b13b6-firebase-adminsdk-z5wy7-75e5ba3f58.json");
+let serviceAccount = require("./bd/ecommerce-b13b6-firebase-adminsdk-z5wy7-75e5ba3f58.json");
 const Producto = require("./productoDaos")
 
 // admin.initializeApp({

@@ -1,0 +1,3 @@
+mongod --dbpath "C:\coder\miBaseMongo"
+
+mongod --dbpath C:\Users\Salo\Documents\BASEMONGO

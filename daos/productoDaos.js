@@ -1,12 +1,16 @@
-const { default: mongoose } = require('mongoose');
-const mongose = require('mongose');
+// const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const esquemaProd = require('./modelsMDB/schemaProducto')
 
 
 class Producto{
     async connectMDB() {
         try{
-           const URL = "mongodb+srv://salo:tako@cluster0.51jwcs4.mongodb.net/?retryWrites=true&w=majority"
+           const URL = "mongodb+srv://salo:tako@cluster0.51jwcs4.mongodb.net/test"
+           let rta = await mongoose.connect(URL, {
+            useNewUrlParser: true,
+            useUniFiedTopology: true
+        })
         }catch (e) {
       console.log(e);
 
@@ -15,12 +19,14 @@ class Producto{
 
 async save(producto){
     try{
-        // let tiempo = new Date()
+        let tiempo = new Date()
         await this.connectMDB()
-        // producto.time = tiempo.toString()
+         producto.fecha = tiempo.toString()
+         
         await esquemaProd.create(producto)
         const id = producto.idP
-        mongoose.disconnected()
+        console.log(id)
+        mongoose.disconnect()
         return id
     }catch (error){
         throw Error(error.message)
@@ -39,6 +45,7 @@ async getAll(){
 }
 }
 
+
 async getById(id){
     try{
         await this.connectMDB()
@@ -54,8 +61,10 @@ async getById(id){
 async changeById(id, cambio){
     try{
         await this.connectMDB()
-        const nuevo = await esquemaProd.updateOne({idP:id}, {$set:cambio})
+        //con este esquema hay que resolver ahora 
+        const nuevo = await esquemaProd.updateOne({_id: String(id)}, {$set:cambio})
         mongoose.disconnect()
+        console.log(nuevo)
         return nuevo
     }catch (error){
         throw Error(error.message)
@@ -65,7 +74,7 @@ async changeById(id, cambio){
 async deleteById(id){
     try{
         await this.connectMDB()
-        const borrar = await esquemaProd.deleteOne({idP:id})
+        const borrar = await esquemaProd.deleteOne({_id: String(id)})
         mongoose.disconnect()
         return borrar
     }catch (error){

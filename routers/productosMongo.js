@@ -1,8 +1,9 @@
 const express = require('express')
 const Producto = require('../daos/productoDaos')
-const { Router } = express
+//const {productoDaos: Producto} = require('../daos/mainDaos')
+//const { Router } = express
 
-const productsRouter = Router()
+const productsRouter = express.Router()
 
 
 
@@ -21,20 +22,22 @@ function validacion (req, res, next) {
 
 
 let fecha = new Date()
-const product = new Producto ("product")
+const product = new Producto("product")
+
+
 //muestra todos los productos
 productsRouter.get("/", validacion, async (req, res) => {
     await product.getAll().then((respuesta)=>{
-     
+     console.log(respuesta)
     res.json(respuesta)
     }) 
 })
 
 
 //GET CON ID IDENTIFICADOR EN LA URL TIPO PARAMS
-productsRouter.get('/:idP', validacion, async (req, res) => {
-   let { idP } = req.params;
-   await product.findOne(idP).then((respuesta)=>{
+productsRouter.get('/:id', validacion, async (req, res) => {
+   let { id } = req.params;
+   await product.getById(id).then((respuesta)=>{
      const encontrar = respuesta
      
      if (encontrar){
@@ -45,42 +48,55 @@ productsRouter.get('/:idP', validacion, async (req, res) => {
    });
    })
 
-
   
 //me estoy quedando con respuesta del 1 ver como hago para pasar todo 
  
 productsRouter.post('/',validacion, async (req, res) => {
-   const {body} = req;
-         let insertBody = {fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.precio, stock: body.stock}
-         await product.save(insertBody).then((respuesta)=>{
-           res.json(respuesta);
- });
-})
+  try{
+  //  const {body} = req;
+   const id = await product.save(req.body)
+   res.status(200).send({
+    status: 200,
+    data: {
+        id,
+    },
+    message:'producto agregado'
+    })} catch (error) {
+        res.status(500).send({
+            status: 500,
+            message: error.message
+        })
+      }
+    })
+        //  let insertBody = { idP: body._id, fecha: fecha.toLocaleDateString(), nombre: body.nombre, descripcion: body.descripcion, codigo:body.codigo, foto: body.foto, precio: body.precio, stock: body.stock}
+        //  await product.save(insertBody).then((respuesta)=>{
+        //    res.json(respuesta);
+
+
 
 
 //PUT CON ID PARAMS SIEMPRE y BODY!
-productsRouter.put('/:idP',validacion, (req, res) => {
-   const { idP } = req.params;
-   let idProd = parseInt(idP)
-   const { body } = req;
-   const { nombre, descripcion, codigo, foto, precio, stock } = body
-   console.log(body.id)
+productsRouter.put('/:id',validacion, (req, res) => {
+  let { id } = req.params;
+   console.log(req.body)
+   const { idP, nombre, descripcion, codigo, foto, precio, stock } = req.body
    const cambio = { idP, nombre, descripcion, codigo, foto, precio, stock };
      
-     product.changeById(idProd, cambio).then((respuesta)=>{
-
+     product.changeById(id, cambio).then((respuesta)=>{
+      console.log(cambio)
        res.json({ sucess: "ok", new: respuesta})
      })
  }) 
 
+ 
 
 //ver si tengo que darle cambio en el archivo tambien com
 
  //DELETE CON ID ESCRIBIENDO EN EL ARCHIVO 
- productsRouter.delete('/:idP',validacion, (req, res) => {
-   const { idP } = req.params;  
-   let idProd = parseInt(idP)   
-   product.deleteById(idProd).then((response) => {
+ productsRouter.delete('/:id',validacion, (req, res) => {
+   const { id } = req.params;  
+     
+   product.deleteById(id).then((response) => {
      res.json({ result: response })
    })
  });
