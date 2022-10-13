@@ -5,8 +5,8 @@ const loginRouter = Router()
 
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
-
-const Usuarios = require("../daos/modelsMDB/usuarios");
+const mongoose = require("mongoose");
+const Usuarios = require("../daos/modelsMDB/schemaUsuarios");
 
 //const FileStore = require('session-file-store')(session)
 const app = express()
@@ -14,11 +14,37 @@ const app = express()
 // app.use(express.json())
 // app.use(express.urlencoded({ extended: true }))
 
-//parport 
+//passport 
 const passport = require("passport");
 app.use(passport.initialize());
 app.use(passport.session());
 const LocalStrategy = require("passport-local").Strategy;
+
+
+//bcrypt 
+const bcrypt = require("bcrypt");
+function isValidPassword(user, password) {
+  return bcrypt.compareSync(password, user.password);
+}
+
+function createHash(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
+
+//fin bcrypt
+
+mongoose
+  .connect("mongodb://localhost:27017/ecommerce")
+  .then(() => console.log("Connected to DB"))
+  .catch((e) => {
+    console.error(e);
+    throw "can not connect to the db";
+  });
+
+
+
+
+
 
 
 passport.use(
@@ -50,6 +76,41 @@ passport.deserializeUser((id, done) => {
   Usuarios.findById(id, done);
 });
 
+passport.use(
+  "signup",
+  new LocalStrategy(
+    {
+      passReqToCallback: true,
+    },
+    (req, username, password, done) => {
+      Usuarios.findOne({ username: username }, function (err, user) {
+        if (err) {
+          console.log("Error in SignUp: " + err);
+          return done(err);
+        }
+
+        if (user) {
+          console.log("User already exists");
+          return done(null, false);
+        }
+
+        const newUser = {
+          username: username,
+          password: createHash(password),
+        };
+        Usuarios.create(newUser, (err, userWithId) => {
+          if (err) {
+            console.log("Error in Saving user: " + err);
+            return done(err);
+          }
+          console.log(user);
+          console.log("User Registration succesful");
+          return done(null, userWithId);
+        });
+      });
+    }
+  )
+);
 
 // termina configuracion passport
 
@@ -72,6 +133,9 @@ loginRouter.use(
     maxAge: 600000
   }),
   );
+
+
+
 
  //res.sendFile('loginForm', { root: "pages/"})
   // si iniciamos sesion mostrar el inicio o bienvenida y sino login
@@ -113,25 +177,66 @@ loginRouter.use(
 //      }    
 //     })
 
+loginRouter.get('/', checkAuthentication ,(req, res) => {
+  res.render("pages/index", {});
+})
 
 loginRouter.get('/login', (req, res) => {
   if (req.isAuthenticated()) {
     const { username, password } = req.user;
     const user = { username, password };
-    res.render("profileUser", { user });
+    res.render("pages/profileUser", { user });
   } else {
-    res.render("login");
+    res.render("pages/loginForm");
   }
 })
 
+loginRouter.get('/faillogin', (req, res) => {
+  res.render("pages/login-error", {});
+})
 
 
 loginRouter.post(
   "/login",
-  passport.authenticate("login", { successRedirect: '/', failureRedirect: "/faillogin" }),
+  passport.authenticate("login", { successRedirect: '/api/', failureRedirect: "/api/faillogin" }),
  // routes.postLogin
 
 );
+
+loginRouter.get('/signup', (req, res) => {
+  if (req.isAuthenticated()) {
+    const { username, password } = req.user;
+    const user = { username, password };
+    res.render("pages/profileUser", { user });
+  } else {
+    res.render("pages/signup");
+  }
+})
+
+
+loginRouter.get('/failsignup', (req, res) => {
+  res.render("pages/signup-error", {});
+})
+
+
+loginRouter.post(
+  "/signup",
+  passport.authenticate("/api/signup", { failureRedirect: "/api/failsignup" }),
+  //routes.postSignup
+);
+
+
+loginRouter.post('/signup', (req, res) => {
+  const { username, password } = req.user;
+  const user = { username, password };
+  res.render("pages/profileUser", { user });
+})
+
+
+loginRouter.get('/logout', (req, res) => {
+  req.logout();
+  res.render("pages/index");
+})
 
 
 //ruta protegida
@@ -139,16 +244,20 @@ function checkAuthentication(req, res, next) {
   if (req.isAuthenticated()) {
    return next();
   } else {
-    res.redirect("/login");
+    res.redirect("/api/login");
   }
 }
 
-app.get("/ruta-protegida", checkAuthentication, (req, res) => {
-  const { username, password } = req.user;
-  const user = { username, password };
- // res.render("profileUser", { user})
-  res.send("<h1>Ruta ok!</h1>"+ JSON.stringify(user));
-});
+// app.get("/", checkAuthentication, (req, res) => {
+//   const { username, password } = req.user;
+//   const user = { username, password };
+//  // res.render("profileUser", { user})
+//   res.send("<h1>Ruta ok!</h1>"+ JSON.stringify(user));
+// });
+
+
+
+
 
 //hasta aqui login
 

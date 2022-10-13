@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Document</title>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+
+
+  <%- include('../partials/navbar'); %>
+  <br />
+
+  <div>
+      {{user.username}}<br />
+      {{user.password}}<br />
+  </div>
+  
+  <a href="/logout">Salir</a>
+  <br />
+      <%- include('../partials/footer'); %> 
+</body>
+</html>
