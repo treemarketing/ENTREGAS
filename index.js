@@ -13,6 +13,9 @@ const server = app.listen(PORT, () => {
 
 server.on("error", error => console.log(`Error en servidor ${error}`))
 
+//para usar ejs
+//linea de configuracion 
+app.set('view engine', 'ejs');
 
 
 app.use(express.json())
@@ -21,7 +24,12 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/public', express.static(__dirname + '/public'));
 
 
+//mongo 
 
+
+
+
+//termina login con mongo
 
 
 // //un middleware de validacion
@@ -47,9 +55,11 @@ app.use('/public', express.static(__dirname + '/public'));
 
   const cartRouter = require('./routers/carritoFirebase')
   const productsRouter = require('./routers/productosMongo')
+  const loginRouter = require('./routers/login')
 
 app.use('/api/productos', productsRouter)
 app.use('/api/carrito', cartRouter)
+app.use('/api/', loginRouter)
 
 //control de direccion de error de paginas
 app.get("*", (req, res, next) =>{
