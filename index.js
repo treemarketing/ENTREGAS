@@ -5,7 +5,16 @@ const app = express()
   // const router = Router()
 
 
-const PORT = process.env.PORT || 8080;
+//ENV 
+
+const dotenv = require('dotenv')
+require('dotenv').config()
+console.log(process.env.PORT)
+//const PORT = process.env.PORT 
+
+const {HOST, PORT} = require("./config")
+
+
 
 const server = app.listen(PORT, () => {
   console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
@@ -24,12 +33,18 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/public', express.static(__dirname + '/public'));
 
 
-//mongo 
+//yargs 
 
+// const yargs = require('yargs/yargs')(process.argv.slice(2))
+// const args = yargs
+//   .default({
+//     p: 8080
+//   })
+//  .argv
 
+//  console.log(args)
+//  console.log(process.argv.slice(2))
 
-
-//termina login con mongo
 
 
 // //un middleware de validacion
