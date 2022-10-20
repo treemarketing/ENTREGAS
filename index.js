@@ -9,10 +9,10 @@ const app = express()
 
 const dotenv = require('dotenv')
 require('dotenv').config()
-console.log(process.env.PORT)
+
 //const PORT = process.env.PORT 
 
-const {HOST, PORT} = require("./config")
+//const {HOST, PORT} = require("./config")
 
 
 
@@ -34,6 +34,8 @@ app.use('/public', express.static(__dirname + '/public'));
 
 
 //yargs 
+
+
 
 // const yargs = require('yargs/yargs')(process.argv.slice(2))
 // const args = yargs
