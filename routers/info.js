@@ -10,8 +10,6 @@ const infoRouter = Router()
 
 
 
-const version = process.version
-console.log(version)
 
 
 
@@ -20,7 +18,6 @@ console.log(version)
 
     //muestra info solicitada
     infoRouter.get("/info", (req, res) => {
-
       try {
         const yargs = require('yargs/yargs')(process.argv.slice(2))
 
@@ -33,13 +30,10 @@ console.log(version)
             processId: process.pid,
             directory: process.cwd()
         }
-
-        res.render('..views/pages/info.ejs', { info })
+        res.render('pages/info', { info })
     } catch(error){
         return res.status(400).send({ error: true })
     }
-      
-    res.json(res)
 
   }) 
 
@@ -49,4 +43,4 @@ console.log(version)
  
 
 
-module.exports = cartRouter;
+module.exports = infoRouter;

@@ -73,10 +73,12 @@ app.use('/public', express.static(__dirname + '/public'));
   const cartRouter = require('./routers/carritoFirebase')
   const productsRouter = require('./routers/productosMongo')
   const loginRouter = require('./routers/login')
+  const infoRouter = require('./routers/info')
 
 app.use('/api/productos', productsRouter)
 app.use('/api/carrito', cartRouter)
 app.use('/api/', loginRouter)
+app.use('/', infoRouter)
 
 //control de direccion de error de paginas
 app.get("*", (req, res, next) =>{
