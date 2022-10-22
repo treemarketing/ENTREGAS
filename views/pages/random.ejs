@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Document</title>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+
+
+  <%- include('../partials/navbar'); %>
+  <br />
+
+  <div>
+
+        <div class="mb-3 container text-center">
+            <h2>Generar números random - Fork</h2>
+  </div>
+  <div>
+    <form  method="post" action="/api/random">
+        <div class="mb-3 container text-center">
+            <input class="form-control" type="number" name="quantity" id="quantity" placeholder="Cantidad" max="500000000" required>
+            <input class="btn btn-primary" type="submit" value="Enviar">
+        </div>
+  <a href="/logout">Salir</a>
+  <br />
+      <%- include('../partials/footer'); %> 
+</body>
+</html>

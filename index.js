@@ -74,11 +74,13 @@ app.use('/public', express.static(__dirname + '/public'));
   const productsRouter = require('./routers/productosMongo')
   const loginRouter = require('./routers/login')
   const infoRouter = require('./routers/info')
+  const randomRouter = require('./routers/random')
 
 app.use('/api/productos', productsRouter)
 app.use('/api/carrito', cartRouter)
 app.use('/api/', loginRouter)
 app.use('/', infoRouter)
+app.use('/api', randomRouter)
 
 //control de direccion de error de paginas
 app.get("*", (req, res, next) =>{
