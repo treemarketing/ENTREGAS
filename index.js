@@ -12,7 +12,7 @@ require('dotenv').config()
 
 //const PORT = process.env.PORT 
 
-//const {HOST, PORT} = require("./config")
+const {HOST, PORT} = require("./config")
 
 
 

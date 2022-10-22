@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Document</title>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+
+
+  <%- include('../partials/navbar'); %>
+  <br />
+
+  <div>
+    <table class="table_info">
+        <tr>
+            <td class="bold_info">Argumentos de entrada</td>
+            <td>{{info.arguments}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Sistema operativo</td>
+            <td>{{info.os}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Versión de node.js</td>
+            <td>{{info.version}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Memoria total reservada</td>
+            <td>{{info.memory}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Path de ejecución</td>
+            <td>{{info.path}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Process ID</td>
+            <td>{{info.processId}}</td>
+        </tr>
+        <tr>
+            <td class="bold_info">Carpeta del proyecto</td>
+            <td>{{info.directory}}</td>
+        </tr>
+    </table>
+  </div>
+  
+  <a href="/logout">Salir</a>
+  <br />
+      <%- include('../partials/footer'); %> 
+</body>
+</html>
