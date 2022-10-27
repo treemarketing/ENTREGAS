@@ -3,13 +3,13 @@
 const express = require('express')
  const { Router } = express
 const infoRouter = Router()
+const cpus = require('os').cpus()
 
 
 
 
 
-
-
+console.log(cpus)
 
 
 
@@ -28,7 +28,8 @@ const infoRouter = Router()
             memory: JSON.stringify(process.memoryUsage().rss, null, 2),
             path: process.execPath,
             processId: process.pid,
-            directory: process.cwd()
+            directory: process.cwd(),
+            numCPUs: cpus.length
         }
         res.render('pages/info', { info })
     } catch(error){

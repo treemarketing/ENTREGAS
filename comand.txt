@@ -35,8 +35,14 @@ forever stop [PID]
 FINALIZACIÓN DE TODOS LOS PROCESOS FOREVER
 forever stopall
 
+VER LISTADO DE PROCESOS PM2 EN 
+pm2 list 
+
+REINICIAR UN PROCESO PM2  
+pm2 restart [name] id - all 
+ 
 FINALIZACIÓN DE UN PROCESO PM2
-pm2 stop [NAME]
+pm2 stop [NAME] id - all 
 * el nombre del proceso de obtienen de la lista al ejecutar pm2 monit
 
 FINALIZACIÓN DE TODOS LOS PROCESOS PM2

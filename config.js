@@ -16,16 +16,19 @@ const MONGOURL= process.env.MONGOURL
    const yargs = require('yargs/yargs')(process.argv.slice(2))
    const args = yargs
      .default({
-     PORT: 8080, 
+     PORT: 8080,
+     MODO: 'FORK' 
    })
 
   .argv
   
 
- console.log(yargs)
+console.log(yargs)
 
 
   const PORT = args.PORT
+  const MODO = args.MODO
 
 
-  module.exports = { PORT, MONGOURL }
+
+  module.exports = { PORT, MONGOURL, MODO }
