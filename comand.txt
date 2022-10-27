@@ -1,0 +1,43 @@
+EJECUTAR  EL SERVIDOR EN MODO FORK
+node server.js // node server.js -m fork
+
+EJECUTAR  EL SERVIDOR EN MODO CLUSTER
+node server.js -m cluster
+
+EJECUTAR EL SERVIDOR CON NODEMON EN MODO FORK
+nodemon server.js // nodemon server.js -m fork
+
+EJECUTAR EL SERVIDOR CON NODEMON EN MODO CLUSTER
+nodemon server.js -m cluster
+
+EJECUTAR EL SERVIDOR CON FOREVER MODO FORK
+forever start server.js // forever start server.js -m fork
+
+EJECUTAR EL SERVIDOR CON FOREVER MODO CLUSTER
+forever start server.js -m cluster
+
+LISTAR LOS PROCESOS DE FOREVER
+forever list
+
+LISTAR PROCESOS POR SISTEMA OPERATIVO
+tasklist /fi "imagename eq node.exe"
+
+EJECUTAR EL SERVIDOR CON PM2 EN MODO FORK (MODO ESCUCHA)
+pm2 start server.js --name="NOMBRE" --watch -- PORT
+
+EJECUTAR EL SERVIDOR CON PM2 EN MODO CLUSTER (MODO ESCUCHA)
+pm2 start server.js --name="NOMBRE" --watch -i max -- PORT
+
+FINALIZACIÓN DE UN PROCESO FOREVER
+forever stop [PID]
+* el id del proceso se obtiene de la lista al ejecutar forever list
+
+FINALIZACIÓN DE TODOS LOS PROCESOS FOREVER
+forever stopall
+
+FINALIZACIÓN DE UN PROCESO PM2
+pm2 stop [NAME]
+* el nombre del proceso de obtienen de la lista al ejecutar pm2 monit
+
+FINALIZACIÓN DE TODOS LOS PROCESOS PM2
+pm2 delete all

@@ -4,8 +4,8 @@
   "description": "entrega 1",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "start-dev": "nodemon index.js"
+    "start": "node server.js",
+    "start-dev": "nodemon server.js"
   },
   "author": "alvaro salomon",
   "license": "ISC",
