@@ -1,12 +1,16 @@
-
+//@ts-check
 
 const express = require('express')
  const { Router } = express
 const infoRouter = Router()
 const cpus = require('os').cpus()
+//compression
+const compression = require('compression')
+infoRouter.use(compression())
 
+//logger 
 
-
+const { errorLogger } = require('../logs/logger')
 
 
 console.log(cpus)
@@ -33,6 +37,7 @@ console.log(cpus)
         }
         res.render('pages/info', { info })
     } catch(error){
+        errorLogger.error(`infoController: ${error.message}`)
         return res.status(400).send({ error: true })
     }
 
