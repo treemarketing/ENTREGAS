@@ -10,6 +10,7 @@
   "author": "alvaro salomon",
   "license": "ISC",
   "dependencies": {
+    "autocannon": "^7.10.0",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.6.0",
     "dotenv": "^16.0.3",
@@ -20,6 +21,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "session-file-store": "^1.5.0",
+    "winston": "^3.8.2",
     "yargs": "^17.6.0"
   },
   "devDependencies": {
