@@ -14,7 +14,7 @@ const { errorLogger } = require('../logs/logger')
 
 
 
-console.log(cpus)
+
 
 
 
