@@ -4,7 +4,7 @@ const express = require('express')
  const { Router } = express
 const randomRouter = Router()
 
-
+//desactivar
 const { fork } = require("child_process");
 
 
@@ -34,6 +34,7 @@ const { fork } = require("child_process");
         const quantity = body.quantity || 100000000
         
         const randomNumbers = fork('./routers/functions/randomnumber.js')
+
         randomNumbers.send({ message: 'start', quantity: quantity })
 
         randomNumbers.on('message', (object) =>{

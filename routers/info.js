@@ -13,8 +13,8 @@ infoRouter.use(compression())
 const { errorLogger } = require('../logs/logger')
 
 
-console.log(cpus)
 
+console.log(cpus)
 
 
 
@@ -35,6 +35,10 @@ console.log(cpus)
             directory: process.cwd(),
             numCPUs: cpus.length
         }
+
+        //ver informe
+        //console.log(info)
+
         res.render('pages/info', { info })
     } catch(error){
         errorLogger.error(`infoController: ${error.message}`)

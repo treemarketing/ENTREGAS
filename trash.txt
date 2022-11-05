@@ -1,3 +1,6 @@
 mongod --dbpath "C:\coder\miBaseMongo"
 
 mongod --dbpath C:\Users\Salo\Documents\BASEMONGO
+
+
+artillery quick --count 20 -n 50 "http://localhost:8080/info" > result_consoleLog.txt
