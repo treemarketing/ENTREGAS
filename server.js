@@ -39,14 +39,13 @@ const numCPUs = require('os').cpus().length
 
 
 if (MODO == 'FORK'  && cluster.isPrimary){
-  console.log(numCPUs)
   console.log(process.pid + "corriendo")
   // fork workers.
-  for (let i = 0; i < numCPUs; i++){
-    cluster.fork();
-  } 
-  cluster.on('exit', (worker, code, signal) => {
-  });
+  // for (let i = 0; i < numCPUs; i++){
+  //   cluster.fork();
+  // } 
+  // cluster.on('exit', (worker, code, signal) => {
+  // });
 
 }else {
   const server = app.listen(PORT, () => {

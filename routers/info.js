@@ -37,7 +37,7 @@ const { errorLogger } = require('../logs/logger')
         }
 
         //ver informe
-        //console.log(info)
+        console.log(info)
 
         res.render('pages/info', { info })
     } catch(error){
