@@ -34,29 +34,33 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/public', express.static(__dirname + '/public'));
 
 //FORK - CLUSTER CON NODE 
-const cluster = require('cluster')
-const numCPUs = require('os').cpus().length
+// const cluster = require('cluster')
+// const numCPUs = require('os').cpus().length
 
 
-if (MODO == 'FORK'  && cluster.isPrimary){
-  console.log(process.pid + "corriendo")
-  // fork workers.
-  // for (let i = 0; i < numCPUs; i++){
-  //   cluster.fork();
-  // } 
-  // cluster.on('exit', (worker, code, signal) => {
-  // });
+// if (MODO == 'FORK'  && cluster.isPrimary){
+//   console.log(process.pid + "corriendo")
+//   //fork workers.
+//   for (let i = 0; i < numCPUs; i++){
+//     cluster.fork();
+//   } 
+//   cluster.on('exit', (worker, code, signal) => {
+//   });
 
-}else {
-  const server = app.listen(PORT, () => {
-    console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
-  })
+// }else {
+//   const server = app.listen(PORT, () => {
+//     console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
+//   })
   
-  server.on("error", error => console.log(`Error en servidor ${error}`)) 
-}
+//   server.on("error", error => console.log(`Error en servidor ${error}`)) 
+// }
 
 
+const server = app.listen(PORT, () => {
+  console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
+})
 
+server.on("error", error => console.log(`Error en servidor ${error}`)) 
 
 
 //yargs 
@@ -114,6 +118,7 @@ app.get("*", (req, res, next) =>{
     res.status(404).send({error: "-2", descripcion: "ruta" + url + " no autorizada"})
     next()
 })
+
 
 
 

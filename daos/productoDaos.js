@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const esquemaProd = require('./modelsMDB/schemaProducto')
 
 
-const {MONGOURL} = require("../config")
-const URL = MONGOURL
+  const {MONGOURL} = require("../config")
+ const URL = MONGOURL
 
 
 
@@ -12,8 +12,10 @@ const URL = MONGOURL
 class Producto{
     async connectMDB() {
         try{
+            
            //const URL = "mongodb+srv://salo:tako@cluster0.51jwcs4.mongodb.net/test"
-           let rta = await mongoose.connect(URL, {
+           //let rta = await mongoose.connect(URL, {
+            let rta = await mongoose.createConnection(URL, {
             useNewUrlParser: true,
             useUniFiedTopology: true
         })
